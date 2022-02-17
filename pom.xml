@@ -4,7 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.shahintraining</groupId>
     <artifactId>shahin-microservices</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>customer-ms</module>
+    </modules>
     <name>shahin-microservices</name>
     <description>shahin-microservices</description>
     <properties>

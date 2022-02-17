@@ -1,0 +1,5 @@
+server:
+  port: 6497
+spring:
+  application:
+    name: customer-ms
