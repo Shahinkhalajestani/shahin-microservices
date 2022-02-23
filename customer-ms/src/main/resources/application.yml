@@ -3,3 +3,11 @@ server:
 spring:
   application:
     name: customer-ms
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/customer-ms
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: shahin
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
