@@ -1,0 +1,8 @@
+server:
+  port: 9065
+spring:
+  application:
+    name: fruad
+  data:
+    mongodb:
+      uri:mongodb://localhost:27017/fraud-ms

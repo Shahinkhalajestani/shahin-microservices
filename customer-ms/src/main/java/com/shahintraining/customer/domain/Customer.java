@@ -2,8 +2,13 @@ package com.shahintraining.customer.domain;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +25,14 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String email;
+    @CreatedBy
+    private String createdBy;
+    @CreatedDate
+    private Date creationDate;
+    @LastModifiedDate
+    private Date modifiedDate;
+    @LastModifiedBy
+    private String modifiedBy;
 
     @Override
     public boolean equals(Object o) {

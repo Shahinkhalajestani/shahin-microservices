@@ -8,6 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>customer-ms</module>
+        <module>fraud-ms</module>
     </modules>
     <name>shahin-microservices</name>
     <description>shahin-microservices</description>
