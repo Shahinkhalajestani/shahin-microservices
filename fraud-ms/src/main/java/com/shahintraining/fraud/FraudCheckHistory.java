@@ -19,6 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true,fluent = true)
+@TypeAlias("freud_check_history")
 public class FraudCheckHistory {
     @Id
     private String id;
