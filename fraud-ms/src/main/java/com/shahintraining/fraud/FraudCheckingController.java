@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.*;
 public record FraudCheckingController(FraudCheckService fraudCheckService) {
 
     @GetMapping("{customerId}")
-    public ResponseEntity<FraudCheckResponse> isFraudster(
+    public FraudCheckResponse isFraudster(
             @PathVariable Long customerId
     ) {
-        return fraudCheckService.isFraudulentCustomer(customerId) ?
-                ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
-                        .body(new FraudCheckResponse(true)) :
-                ResponseEntity.ok(new FraudCheckResponse(false));
+        return fraudCheckService.isFraudulentCustomer(customerId)? new FraudCheckResponse(true):
+        new FraudCheckResponse(false);
     }
 
 }

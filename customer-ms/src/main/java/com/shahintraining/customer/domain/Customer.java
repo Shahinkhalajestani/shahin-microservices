@@ -18,8 +18,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @Accessors(chain = true,fluent = true)
 public class Customer {
-    @SequenceGenerator(name = "customer-id-sequence" ,sequenceName = "customer-id-sequence")
-    @GeneratedValue(generator = "customer-id-sequence",strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "customer_id_sequence" ,sequenceName = "customer_id_sequence",allocationSize = 1)
+    @GeneratedValue(generator = "customer_id_sequence",strategy = GenerationType.SEQUENCE)
     @Id
     private Long id;
     private String firstName;
