@@ -5,7 +5,7 @@ spring:
     name: customer-ms
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/customer-ms
+    url: jdbc:postgresql://localhost:5432/customer_ms
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: shahin

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public record CustomerController(CustomerService customerService) {
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegistrationRequest
+    public ResponseEntity<Void> registerCustomer(@RequestBody CustomerRegistrationRequest
                                                           customerRegistrationRequest){
         customerService.register(customerRegistrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
