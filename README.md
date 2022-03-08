@@ -1,2 +1,2 @@
 # shahin-microservices
-This project is based on learning purpose.
+This project is based for learning purpose.
