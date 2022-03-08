@@ -14,6 +14,17 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: blah@gmail.com
+    password: balahblah
+    properties:
+      mail:
+        smtp:
+          auth: true
+          startttls:
+            enable: true
 
 eureka:
   client:

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestController
 @RequestMapping("api/v1/customer")
@@ -17,8 +19,8 @@ public record CustomerController(CustomerService customerService) {
 
     @PostMapping("/register")
     public ResponseEntity<Void> registerCustomer(@RequestBody CustomerRegistrationRequest
-                                                          customerRegistrationRequest){
-        customerService.register(customerRegistrationRequest);
+                                                          customerRegistrationRequest, HttpServletRequest request){
+        customerService.register(customerRegistrationRequest,request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
