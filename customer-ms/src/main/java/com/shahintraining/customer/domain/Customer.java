@@ -24,6 +24,8 @@ public class Customer {
     private Long id;
     private String firstName;
     private String lastName;
+    private String password;
+    private boolean verified = false;
     private String email;
     @CreatedBy
     private String createdBy;

@@ -22,9 +22,15 @@ public record CustomerRegistrationEventHandler(
 
     @Override
     public void onApplicationEvent(CustomerRegistrationEvent event) {
+        sendVerficationEmail(event);
+    }
+
+    private void sendVerficationEmail(CustomerRegistrationEvent event) {
         Customer customer = event.getCustomer();
         String token = UUID.randomUUID().toString();
-        createVerificationToken(customer, token);
+        do {
+            createVerificationToken(customer, token);
+        }while (verificationTokenRepository.findByToken(token).isPresent());
         String confirmationUrl = event.getAppUrl() + "/verify-customer?token=" + token;
         String message = messageSource.getMessage("reg.message" + confirmationUrl, null, event.getLocale());
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -36,9 +42,9 @@ public record CustomerRegistrationEventHandler(
     }
 
 
-    private VerificationToken createVerificationToken(Customer customer, String token) {
+    private void createVerificationToken(Customer customer, String token) {
         VerificationToken verificationToken = new VerificationToken().token(token).customer(customer);
         verificationToken.calculateExpiryDate(VerificationToken.EXPIRE_IN_MINUTES);
-        return verificationTokenRepository.save(verificationToken);
+        verificationTokenRepository.save(verificationToken);
     }
 }
