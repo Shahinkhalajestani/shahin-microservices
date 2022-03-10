@@ -9,15 +9,23 @@ import com.shahintraining.customer.exception.CustomerNotFoundException;
 import com.shahintraining.customer.proxy.FraudCheckProxy;
 import com.shahintraining.customer.repo.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public record CustomerService(CustomerRepository customerRepository, FraudCheckProxy fraudCheckProxy) {
+public record CustomerService(CustomerRepository customerRepository, FraudCheckProxy fraudCheckProxy)
+        implements UserDetailsService {
 
 
     public Customer register(CustomerRegistrationRequest customerRegistrationRequest) {
@@ -51,5 +59,10 @@ public record CustomerService(CustomerRepository customerRepository, FraudCheckP
     }
 
 
-
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Customer customer = getCustomer(username);
+        return new User(customer.email(),customer.password(),customer.roles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList()));
+    }
 }

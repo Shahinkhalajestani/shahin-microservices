@@ -56,9 +56,17 @@ public class CustomerExceptionHandler {
     @ExceptionHandler(VerificationTokenExpiredException.class)
     @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
     public final ResponseEntity<ExceptionResponse> verificationTokenExpiredExceptionHandler(
-            VerificationTokenExpiredException ex, WebRequest request){
+            VerificationTokenExpiredException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
-                .body(new ExceptionResponse(ex.getMessage(),request.getDescription(false),new Date()));
+                .body(new ExceptionResponse(ex.getMessage(), request.getDescription(false), new Date()));
+    }
+
+    @ExceptionHandler(InvalidTokenPrefixException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final ResponseEntity<ExceptionResponse> invalidTokenPrefixExceptionHandler(
+            InvalidTokenPrefixException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionResponse(ex.getMessage(), request.getDescription(false), new Date()));
     }
 
 }

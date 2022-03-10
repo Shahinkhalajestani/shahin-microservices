@@ -1,6 +1,9 @@
 package com.shahintraining.customer.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,7 +11,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -16,10 +21,10 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true,fluent = true)
+@Accessors(chain = true, fluent = true)
 public class Customer {
-    @SequenceGenerator(name = "customer_id_sequence" ,sequenceName = "customer_id_sequence",allocationSize = 1)
-    @GeneratedValue(generator = "customer_id_sequence",strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "customer_id_sequence", sequenceName = "customer_id_sequence", allocationSize = 1)
+    @GeneratedValue(generator = "customer_id_sequence", strategy = GenerationType.SEQUENCE)
     @Id
     private Long id;
     private String firstName;
@@ -35,6 +40,10 @@ public class Customer {
     private Date modifiedDate;
     @LastModifiedBy
     private String modifiedBy;
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id")
+            , inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
