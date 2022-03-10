@@ -34,7 +34,7 @@ public class JwtUtilityService {
 
     private  final Calendar cal = Calendar.getInstance();
 
-    private String generateAccessToken(UserDetails userDetails, String requestUri){
+    public String generateAccessToken(UserDetails userDetails, String requestUri){
         cal.setTime(new Date());
         cal.add(Calendar.MINUTE,properties.getAccessTokenExpireTimeInMinutes());
         return JWT.create()
@@ -48,7 +48,7 @@ public class JwtUtilityService {
                 .sign(getAlgorithm());
     }
 
-    private String generateRefreshToken(UserDetails userDetails,String requestUri){
+    public String generateRefreshToken(UserDetails userDetails,String requestUri){
         cal.setTime(new Date());
         cal.add(Calendar.DATE,properties.getRefreshTokenExpireTimeInDays());
         return JWT.create()
@@ -59,7 +59,7 @@ public class JwtUtilityService {
                 .sign(getAlgorithm());
     }
 
-    private List<? extends GrantedAuthority> extractAuthorities(String token){
+    public List<? extends GrantedAuthority> extractAuthorities(String token){
         DecodedJWT decodedJWT = verifyToken(token);
         return decodedJWT.getClaim("roles").asList(String.class).stream().map(SimpleGrantedAuthority::new)
                 .toList();
