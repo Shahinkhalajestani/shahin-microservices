@@ -16,11 +16,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public record VerificationTokenService(VerificationTokenRepository verificationTokenRepository) {
 
-    public VerificationToken findByTokenValue(String token){
-       return verificationTokenRepository.findByToken(token).orElseThrow(() -> {
-            log.error("token {} not found in repository",token);
+    public VerificationToken findByTokenValue(String token) {
+        return verificationTokenRepository.findByToken(token).orElseThrow(() -> {
+            log.error("token {} not found in repository", token);
             throw new VerificationTokenNotFoundException("verification token not found");
         });
+    }
+
+    public boolean checkTokenExists(String token) {
+        return verificationTokenRepository.existsVerificationTokenByToken(token);
+    }
+
+    public void save(VerificationToken verificationToken) {
+        verificationTokenRepository.save(verificationToken);
     }
 
 }

@@ -4,6 +4,8 @@ import com.shahintraining.customer.domain.Customer;
 import com.shahintraining.customer.domain.CustomerRegistrationRequest;
 import com.shahintraining.customer.domain.VerificationToken;
 import com.shahintraining.customer.events.CustomerRegistrationEvent;
+import com.shahintraining.customer.exception.VerificationTokenExpiredException;
+import com.shahintraining.customer.exception.VerificationTokenNotFoundException;
 import com.shahintraining.customer.service.CustomerService;
 import com.shahintraining.customer.service.VerificationTokenService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,9 @@ public record CustomerController(CustomerService customerService, VerificationTo
     @GetMapping("/verify-customer")
     public ResponseEntity<Void> verifyCustomer(@RequestParam String token){
         VerificationToken tokenValue = verificationTokenService.findByTokenValue(token);
+        if (tokenValue.expired()){
+            throw new VerificationTokenExpiredException("the token is expired");
+        }
         Customer customer = tokenValue.customer();
         customerService.checkCustomerFraudster(customer.id());
         customer.verified(true);

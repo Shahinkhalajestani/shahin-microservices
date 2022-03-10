@@ -17,18 +17,16 @@ public class CustomerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public final ResponseEntity<ExceptionResponse> customerExistsExceptionHandler(CustomerAlreadyExistsException ex,
                                                                                   WebRequest request) {
-        ExceptionResponse response =
-                new ExceptionResponse(ex.getMessage(), request.getDescription(true), new Date());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionResponse(ex.getMessage(), request.getDescription(true), new Date()));
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public final ResponseEntity<ExceptionResponse> customerExistsExceptionHandler(Exception ex,
                                                                                   WebRequest request) {
-        ExceptionResponse response =
-                new ExceptionResponse(ex.getMessage(), request.getDescription(false), new Date());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionResponse(ex.getMessage(), request.getDescription(false), new Date()));
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
@@ -42,16 +40,24 @@ public class CustomerExceptionHandler {
     @ExceptionHandler(VerificationTokenNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ResponseEntity<ExceptionResponse> tokenNotFoundExceptionHandler(
-            VerificationTokenNotFoundException ex,WebRequest request){
+            VerificationTokenNotFoundException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ExceptionResponse(ex.getMessage(),request.getDescription(false),new Date()));
+                .body(new ExceptionResponse(ex.getMessage(), request.getDescription(false), new Date()));
     }
 
     @ExceptionHandler(CustomerIsFraudsterException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ResponseEntity<ExceptionResponse> customerIsFraudsterExceptionHandler(
-            CustomerIsFraudsterException ex,WebRequest request){
+            CustomerIsFraudsterException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(new ExceptionResponse(ex.getMessage(), request.getDescription(false), new Date()));
+    }
+
+    @ExceptionHandler(VerificationTokenExpiredException.class)
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+    public final ResponseEntity<ExceptionResponse> verificationTokenExpiredExceptionHandler(
+            VerificationTokenExpiredException ex, WebRequest request){
+        return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
                 .body(new ExceptionResponse(ex.getMessage(),request.getDescription(false),new Date()));
     }
 

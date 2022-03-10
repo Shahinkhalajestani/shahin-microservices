@@ -35,7 +35,7 @@ public class VerificationToken {
     }
 
     public boolean expired(){
-        return expirationDate.before(new Date());
+        return expirationDate.after(new Date());
     }
 
 }
