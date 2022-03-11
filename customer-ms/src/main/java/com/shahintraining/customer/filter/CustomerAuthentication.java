@@ -1,9 +1,10 @@
-package com.shahintraining.customer.security;
+package com.shahintraining.customer.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shahintraining.customer.domain.UsernamePasswordRequest;
 import com.shahintraining.customer.service.JwtUtilityService;
 import lombok.SneakyThrows;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,11 +26,10 @@ public class CustomerAuthentication extends UsernamePasswordAuthenticationFilter
     private final ObjectMapper mapper = new ObjectMapper();
 
     public CustomerAuthentication(AuthenticationManager authenticationManager,
-                                  JwtUtilityService jwtUtilityService,
-                                  AuthenticationManager authenticationManager1) {
+                                  JwtUtilityService jwtUtilityService) {
         super(authenticationManager);
         this.jwtUtilityService = jwtUtilityService;
-        this.authenticationManager = authenticationManager1;
+        this.authenticationManager = authenticationManager;
     }
 
     @SneakyThrows
@@ -52,6 +52,7 @@ public class CustomerAuthentication extends UsernamePasswordAuthenticationFilter
         HashMap<String, String> responseMap = new HashMap<>();
         responseMap.put("access_token", jwtUtilityService.generateAccessToken(userDetails,requestURI));
         responseMap.put("refresh_token", jwtUtilityService.generateRefreshToken(userDetails,requestURI));
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         mapper.writeValue(response.getOutputStream(),responseMap);
     }
 }

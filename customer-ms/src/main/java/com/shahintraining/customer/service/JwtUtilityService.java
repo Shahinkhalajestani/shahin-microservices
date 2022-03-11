@@ -30,16 +30,14 @@ public class JwtUtilityService {
 
     private final JwtConfigureProperties properties;
 
-    private final CustomerService customerService;
+    private final Calendar cal = Calendar.getInstance();
 
-    private  final Calendar cal = Calendar.getInstance();
-
-    public String generateAccessToken(UserDetails userDetails, String requestUri){
+    public String generateAccessToken(UserDetails userDetails, String requestUri) {
         cal.setTime(new Date());
-        cal.add(Calendar.MINUTE,properties.getAccessTokenExpireTimeInMinutes());
+        cal.add(Calendar.MINUTE, properties.getAccessTokenExpireTimeInMinutes());
         return JWT.create()
                 .withSubject(userDetails.getUsername())
-                .withClaim("roles",userDetails.getAuthorities().stream()
+                .withClaim("roles", userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
                 .withIssuer(requestUri)
@@ -48,9 +46,9 @@ public class JwtUtilityService {
                 .sign(getAlgorithm());
     }
 
-    public String generateRefreshToken(UserDetails userDetails,String requestUri){
+    public String generateRefreshToken(UserDetails userDetails, String requestUri) {
         cal.setTime(new Date());
-        cal.add(Calendar.DATE,properties.getRefreshTokenExpireTimeInDays());
+        cal.add(Calendar.DATE, properties.getRefreshTokenExpireTimeInDays());
         return JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withIssuer(requestUri)
@@ -59,14 +57,19 @@ public class JwtUtilityService {
                 .sign(getAlgorithm());
     }
 
-    public List<? extends GrantedAuthority> extractAuthorities(String token){
+    public List<? extends GrantedAuthority> extractAuthorities(String token) {
         DecodedJWT decodedJWT = verifyToken(token);
         return decodedJWT.getClaim("roles").asList(String.class).stream().map(SimpleGrantedAuthority::new)
                 .toList();
     }
 
+    public String extractUsernameFromToken(String token) {
+        return verifyToken(token).getSubject();
+    }
+
+
     private DecodedJWT verifyToken(String token) {
-        if (!checkAuthorizationHeader(token)){
+        if (!checkAuthorizationHeader(token)) {
             log.error("token prefix is not present or invalid");
             throw new InvalidTokenPrefixException("token prefix is not present or invalid");
         }
