@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: eureka-naming-server
+  sleuth:
+    sampler:
+      probability: 1.0
 eureka:
   client:
     fetch-registry: false

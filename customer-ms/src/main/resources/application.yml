@@ -14,6 +14,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -25,6 +26,9 @@ spring:
           auth: true
           startttls:
             enable: true
+  sleuth:
+    sampler:
+      probability: 1.0
 
 eureka:
   client:

@@ -1,5 +1,6 @@
 server:
   port: 25489
+
 spring:
   application:
     name: fraud
@@ -12,6 +13,9 @@ spring:
       port: 27017
       host: localhost
       auto-index-creation: true
+  sleuth:
+    sampler:
+      probability: 1.0
 
 eureka:
   client:
