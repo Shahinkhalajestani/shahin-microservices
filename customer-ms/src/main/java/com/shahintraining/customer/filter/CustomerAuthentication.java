@@ -48,11 +48,6 @@ public class CustomerAuthentication extends UsernamePasswordAuthenticationFilter
                                             FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-        String requestURI = request.getRequestURI();
-        HashMap<String, String> responseMap = new HashMap<>();
-        responseMap.put("access_token", jwtUtilityService.generateAccessToken(userDetails,requestURI));
-        responseMap.put("refresh_token", jwtUtilityService.generateRefreshToken(userDetails,requestURI));
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        mapper.writeValue(response.getOutputStream(),responseMap);
+        jwtUtilityService.generateTokens(userDetails,request,response);
     }
 }

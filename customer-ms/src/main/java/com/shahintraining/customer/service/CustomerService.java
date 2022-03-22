@@ -2,12 +2,14 @@ package com.shahintraining.customer.service;
 
 import com.shahintraining.customer.domain.Customer;
 import com.shahintraining.customer.domain.CustomerRegistrationRequest;
+import com.shahintraining.customer.domain.Role;
 import com.shahintraining.customer.events.CustomerRegistrationEvent;
 import com.shahintraining.customer.exception.CustomerAlreadyExistsException;
 import com.shahintraining.customer.exception.CustomerIsFraudsterException;
 import com.shahintraining.customer.exception.CustomerNotFoundException;
 import com.shahintraining.customer.proxy.FraudCheckProxy;
 import com.shahintraining.customer.repo.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +27,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public record CustomerService(CustomerRepository customerRepository, FraudCheckProxy fraudCheckProxy)
-        implements UserDetailsService {
+@RequiredArgsConstructor
+@Transactional
+public class CustomerService implements UserDetailsService {
 
+   private final CustomerRepository customerRepository;
+   private final FraudCheckProxy fraudCheckProxy;
+    private final PasswordEncoder passwordEncoder;
 
     public Customer register(CustomerRegistrationRequest customerRegistrationRequest) {
         customerRepository.findCustomerByEmail(customerRegistrationRequest.email()).ifPresent(
@@ -37,8 +44,10 @@ public record CustomerService(CustomerRepository customerRepository, FraudCheckP
         log.info("registering customer : {}", customerRegistrationRequest.firstName());
         Customer customer = new Customer().firstName(customerRegistrationRequest.firstName())
                 .lastName(customerRegistrationRequest.lastName())
-                .email(customerRegistrationRequest.email());
-       return customerRepository.save(customer);
+                .email(customerRegistrationRequest.email())
+                .password(passwordEncoder.encode(customerRegistrationRequest.password()));
+        customer.addRole(new Role(null,"ROLE_USER"));
+         return customerRepository.save(customer);
     }
 
     public Customer getCustomer(String email){

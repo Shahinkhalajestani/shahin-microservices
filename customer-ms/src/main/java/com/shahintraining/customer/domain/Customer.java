@@ -9,12 +9,10 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -40,10 +38,17 @@ public class Customer {
     private Date modifiedDate;
     @LastModifiedBy
     private String modifiedBy;
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles = new HashSet<>();
+    private Collection<Role> roles = new ArrayList<>();
+
+
+    public void addRole(Role role){
+        if (CollectionUtils.isEmpty(roles))
+            roles = new HashSet<>();
+        roles.add(role);
+    }
 
     @Override
     public boolean equals(Object o) {

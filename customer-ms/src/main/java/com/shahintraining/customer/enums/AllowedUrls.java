@@ -1,17 +1,15 @@
 package com.shahintraining.customer.enums;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public enum AllowedUrls {
 
-    LOGIN("/login"),
-    SIGN_UP("/sign-up"),
-    REFRESH_TOKEN("api/v1/customer/refresh-token");
+    LOGIN("/api/v1/customer/login"),
+    RESEND_TOKEN("/api/v1/customer/resend-token"),
+    REFRESH_TOKEN("/api/v1/customer/refresh-token/**"),
+    VERIFY("/api/v1/customer/verify-customer"),
+    REGISTER("/api/v1/customer/register");
 
     private final String value;
 

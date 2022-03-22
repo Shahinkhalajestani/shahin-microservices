@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @EnableFeignClients
 @PropertySource("classpath:app-field.properties")
+@PropertySource("classpath:security.properties")
 @EnableConfigurationProperties({JwtConfigureProperties.class})
 public class CustomerApplication {
 

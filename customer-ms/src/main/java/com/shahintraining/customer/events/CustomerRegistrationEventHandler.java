@@ -3,23 +3,21 @@ package com.shahintraining.customer.events;
 import com.shahintraining.customer.domain.Customer;
 import com.shahintraining.customer.domain.VerificationToken;
 import com.shahintraining.customer.service.VerificationTokenService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Component
+@Slf4j
 public record CustomerRegistrationEventHandler(
-        VerificationTokenService verificationTokenService, JavaMailSender mailSender,
-        MessageSource messageSource,
-        @Value("${server.email.address}") String serverMail) implements ApplicationListener<CustomerRegistrationEvent> {
+        VerificationTokenService verificationTokenService/*, JavaMailSender mailSender*/,
+        MessageSource messageSource, Environment environment) implements ApplicationListener<CustomerRegistrationEvent> {
+
 
 
     @Override
@@ -28,20 +26,24 @@ public record CustomerRegistrationEventHandler(
     }
 
     private void sendVerificationEmail(CustomerRegistrationEvent event) {
+        String serverMail = environment.getProperty("server.email.address");
         Customer customer = event.getCustomer();
         String token;
         do {
             token = UUID.randomUUID().toString();
         } while (verificationTokenService().checkTokenExists(token));
         createVerificationToken(customer, token);
+        log.info("the token is : {}",token);
         String confirmationUrl = event.getAppUrl() + "/verify-customer?token=" + token;
-        String message = messageSource.getMessage("reg.message" + confirmationUrl, null, event.getLocale());
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(serverMail);
-        simpleMailMessage.setText(message);
-        simpleMailMessage.setTo(customer.email());
-        simpleMailMessage.setSubject("Customer Verification");
-        mailSender.send(simpleMailMessage);
+//        String message = messageSource.getMessage("reg.message" + confirmationUrl, null, event.getLocale());
+//        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//        assert serverMail != null;
+//        simpleMailMessage.setFrom(serverMail);
+//        simpleMailMessage.setText(message);
+//        simpleMailMessage.setTo(customer.email());
+//        simpleMailMessage.setSubject("Customer Verification");
+//        mailSender.send(simpleMailMessage);
+//        System.out.println(simpleMailMessage);
     }
 
 

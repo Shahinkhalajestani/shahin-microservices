@@ -3,18 +3,24 @@ package com.shahintraining.customer.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shahintraining.customer.config.JwtConfigureProperties;
 import com.shahintraining.customer.exception.InvalidTokenPrefixException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +36,8 @@ public class JwtUtilityService {
 
     private final JwtConfigureProperties properties;
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     private final Calendar cal = Calendar.getInstance();
 
     public String generateAccessToken(UserDetails userDetails, String requestUri) {
@@ -38,12 +46,22 @@ public class JwtUtilityService {
         return JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withClaim("roles", userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))
+                        .map(GrantedAuthority::getAuthority).toList())
                 .withIssuer(requestUri)
                 .withIssuedAt(new Date())
                 .withExpiresAt(cal.getTime())
                 .sign(getAlgorithm());
+    }
+
+
+    public void generateTokens(UserDetails userDetails,
+            HttpServletRequest request , HttpServletResponse response) throws IOException {
+        String requestURI = request.getRequestURI();
+        HashMap<String, String> responseMap = new HashMap<>();
+        responseMap.put("access_token", generateAccessToken(userDetails,requestURI));
+        responseMap.put("refresh_token", generateRefreshToken(userDetails,requestURI));
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        mapper.writeValue(response.getOutputStream(),responseMap);
     }
 
     public String generateRefreshToken(UserDetails userDetails, String requestUri) {
