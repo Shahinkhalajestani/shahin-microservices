@@ -4,5 +4,6 @@ public record CustomerRegistrationRequest(String firstName,
                                           String lastName ,
                                           String email,
                                           String password,
-                                          String matchingPassword) {
+                                          String matchingPassword,
+                                          String phoneNumber) {
 }

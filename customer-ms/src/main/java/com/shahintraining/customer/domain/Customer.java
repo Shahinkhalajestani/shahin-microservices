@@ -38,6 +38,7 @@ public class Customer {
     private Date modifiedDate;
     @LastModifiedBy
     private String modifiedBy;
+    private String phoneNumber;
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
