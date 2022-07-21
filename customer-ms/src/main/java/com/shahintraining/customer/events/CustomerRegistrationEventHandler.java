@@ -25,7 +25,7 @@ public record CustomerRegistrationEventHandler(
 
     @Override
     public void onApplicationEvent(@NonNull CustomerRegistrationEvent event) {
-
+          sendNotificationToCustomer(event);
 //        sendVerificationEmail(event);
     }
 

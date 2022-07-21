@@ -10,7 +10,7 @@ public class CustomerNotificationService {
     private final CustomerNotificationRepository customerNotificationRepository;
 
 
-    private void saveCustomerNotification(CustomerNotificationDto customerNotificationDto){
+    public void saveCustomerNotification(CustomerNotificationDto customerNotificationDto){
         CustomerNotification customerNotification = customerNotificationMapper.toEntity(customerNotificationDto);
         customerNotificationRepository.save(customerNotification);
     }
