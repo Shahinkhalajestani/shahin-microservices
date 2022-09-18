@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -15,7 +14,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Accessors(chain = true)
 public class CustomerNotification {
     @Id
-    @Indexed(unique = true)
     private String id;
     private String content;
     private String customerId;

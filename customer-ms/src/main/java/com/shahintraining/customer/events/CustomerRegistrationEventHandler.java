@@ -4,23 +4,25 @@ import com.shahintraining.customer.domain.Customer;
 import com.shahintraining.customer.domain.VerificationToken;
 import com.shahintraining.customer.service.VerificationTokenService;
 import com.shahintraining.notification.CustomerNotificationDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
 @Slf4j
-public record CustomerRegistrationEventHandler(
-        VerificationTokenService verificationTokenService, JavaMailSender mailSender,
-        MessageSource messageSource, Environment environment) implements ApplicationListener<CustomerRegistrationEvent> {
+@RequiredArgsConstructor
+public class CustomerRegistrationEventHandler implements ApplicationListener<CustomerRegistrationEvent> {
 
+    private final Environment environment;
+    private final MessageSource messageSource;
+    private final VerificationTokenService verificationTokenService;
 
 
     @Override
@@ -35,7 +37,7 @@ public record CustomerRegistrationEventHandler(
         String token;
         do {
             token = UUID.randomUUID().toString();
-        } while (verificationTokenService().checkTokenExists(token));
+        } while (verificationTokenService.checkTokenExists(token));
         createVerificationToken(customer, token);
         log.info("the token is : {}",token);
         String confirmationUrl = event.getAppUrl() + "/verify-customer?token=" + token;
